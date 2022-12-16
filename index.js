@@ -2,7 +2,7 @@ express = require('express');
 app = express();
 PORT = 3000;
 
-app.get('/', () => console.log('Hello world'));
+app.get('/', (req, res, next) => res.send('Hello world'));
 
 
 app.listen(PORT, () => 
