@@ -73,3 +73,5 @@ app.put('/envelopes/:envelopeTitle', validateEnvelope, (req, res, next) => {
 
 app.listen(PORT, () => 
     console.log(`App listening on localhost:${PORT}/`));
+
+module.exports = app;
