@@ -3,7 +3,9 @@
     "scripts": {
   
       
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "test": "mocha",
+    "coverage": "nyc --reporter=lcov npm run test"
   
     },
   
