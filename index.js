@@ -5,18 +5,23 @@ PORT = 3000;
 
 let envelopes = [];
 
+app.envelopes = envelopes;
+
 app.use('/envelopes', bodyParser.json({ type: 'application/json' }));
 
 app.param('envelopeTitle', (req, res, next, title) => {
-    console.log(envelopes);
     const envelope = envelopes.find((envelope) => {
-        return envelope.title.toLowerCase() === title.toLowerCase()});
+      return envelope.title.toLowerCase() === title.toLowerCase();
+    });
     if (envelope) {
-        req.envelope = envelope;
-       
+      req.envelope = envelope;
+      next();
+    } 
+    else {
+      res.status(404).send('Envelope not found!');
     }
-    next();
-});
+    
+  });
 
 const validateEnvelope = (req, res, next) => {
     const envelope = req.body;
@@ -41,9 +46,7 @@ app.get('/envelopes/:envelopeTitle', (req, res, next) => {
     if (req.envelope){
         res.send(req.envelope);
     }
-    else {
-        res.status(404).send('Envelope not found!');
-    }
+    
 })
 
 app.delete('/envelopes/:envelopeTitle', (req, res, next) => {   
@@ -77,5 +80,4 @@ app.listen(PORT, () =>
     console.log(`App listening on localhost:${PORT}/`));
 
 
-app.envelopes = envelopes;
 module.exports = app;

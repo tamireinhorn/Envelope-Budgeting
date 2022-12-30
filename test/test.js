@@ -10,8 +10,9 @@ const addTestEnvelope = () => {
 };
 const removeEnv = () => {
   console.log("After called");
-  envelopes.splice(0, 1);
+  envelopes = envelopes.filter(env => env.title !== "Gas");
 };
+
 describe("envelope routes", function () {
   describe("GET envelopes", function () {
     beforeEach(addTestEnvelope);
@@ -37,9 +38,11 @@ describe("envelope routes", function () {
       return request(app)
         .get("/envelopes")
         .expect(200)
-        .then((response) => expect(response.body).to.deep.equal(app.envelopes));
+        .then((response) => expect(response.body).to.deep.equal(envelopes));
     });
   });
+
+
   describe("DELETE envelope", function () {
     beforeEach(addTestEnvelope);
     afterEach(removeEnv);
@@ -64,6 +67,8 @@ describe("envelope routes", function () {
         });
     });
   });
+  
+  
   describe("GET specific envelope", function () {
     beforeEach(addTestEnvelope);
     afterEach(removeEnv);
