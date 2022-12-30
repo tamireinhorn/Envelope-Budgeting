@@ -10,7 +10,7 @@ app.envelopes = envelopes;
 app.use('/envelopes', bodyParser.json({ type: 'application/json' }));
 
 app.param('envelopeTitle', (req, res, next, title) => {
-    const envelope = envelopes.find((envelope) => {
+    const envelope = app.envelopes.find((envelope) => {
       return envelope.title.toLowerCase() === title.toLowerCase();
     });
     if (envelope) {

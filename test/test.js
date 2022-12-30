@@ -5,11 +5,11 @@ const app = require("../index");
 let envelopes = app.envelopes;
 
 const addTestEnvelope = () => {
-  console.log("Before called");
+
   envelopes.push({ title: "Gas", budget: "2000" });
 };
 const removeEnv = () => {
-  console.log("After called");
+
   envelopes = envelopes.filter(env => env.title !== "Gas");
 };
 
