@@ -8,6 +8,7 @@ let envelopes = [];
 app.use('/envelopes', bodyParser.json({ type: 'application/json' }));
 
 app.param('envelopeTitle', (req, res, next, title) => {
+    console.log(envelopes);
     const envelope = envelopes.find((envelope) => {
         return envelope.title.toLowerCase() === title.toLowerCase()});
     if (envelope) {
@@ -45,7 +46,7 @@ app.get('/envelopes/:envelopeTitle', (req, res, next) => {
     }
 })
 
-app.delete('/envelopes/:envelopeTitle', (req, res, next) => {  
+app.delete('/envelopes/:envelopeTitle', (req, res, next) => {   
     if (req.envelope)
     {
     envelopes = envelopes.filter((envelope) => (envelope) !== req.envelope)
@@ -57,8 +58,9 @@ app.delete('/envelopes/:envelopeTitle', (req, res, next) => {
 });
 
 
+
 app.put('/envelopes/:envelopeTitle', validateEnvelope, (req, res, next) => {
-    // Find envelope is done via param. With that, you should also send either:
+    // Find envelope is done via param. With that, you should also send either: 
     // A new budget or a spent value.
     const foundEnvelope = envelopes.find((prevEnvelope) => {return prevEnvelope.title == req.envelope.title});
     if (foundEnvelope) {
@@ -74,4 +76,6 @@ app.put('/envelopes/:envelopeTitle', validateEnvelope, (req, res, next) => {
 app.listen(PORT, () => 
     console.log(`App listening on localhost:${PORT}/`));
 
+
+app.envelopes = envelopes;
 module.exports = app;
