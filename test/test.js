@@ -90,4 +90,30 @@ describe("envelope routes", function () {
         });
     });
   });
+
+  describe('PUT envelope', function () {
+    beforeEach(addTestEnvelope);
+    afterEach(removeEnv);
+    it(`Rejects an envelope if it is badly formed`, function () {
+      return request(app)
+      .put(`/envelopes/Food`)
+      .send({budget: 100})
+      .expect(400);
+    });
+
+    it('Creates an envelope if it is the first', function () {
+
+      return request(app)
+      .put('/envelopes/Food')
+      .send({title: 'Food', budget: 100})
+      .expect(201);
+    });
+
+    it('Updates envelopes when they already exist', function () {
+      return request(app)
+      .put('/envelopes/Gas')
+      .send({title: 'Gas', budget: 10})
+      .expect(200);
+    })
+  })
 });

@@ -15,11 +15,9 @@ app.param('envelopeTitle', (req, res, next, title) => {
     });
     if (envelope) {
       req.envelope = envelope;
-      next();
-    } 
-    else {
-      res.status(404).send('Envelope not found!');
     }
+    next();
+
     
   });
 
@@ -46,18 +44,22 @@ app.get('/envelopes/:envelopeTitle', (req, res, next) => {
     if (req.envelope){
         res.send(req.envelope);
     }
+    else {
+        res.status(404).send('Envelope not found!');
+      };
     
 })
 
 app.delete('/envelopes/:envelopeTitle', (req, res, next) => {   
     if (req.envelope)
-    {
-    envelopes = envelopes.filter((envelope) => (envelope) !== req.envelope)
-    res.status(204).send(); // You don't send messages with this status.
-    }
+        {
+        envelopes = envelopes.filter((envelope) => (envelope) !== req.envelope)
+        res.status(204).send(); // You don't send messages with this status.
+        }
     else {
         res.status(404).send('Envelope not found!');
-    }
+        }
+
 });
 
 
