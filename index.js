@@ -67,7 +67,7 @@ app.delete('/envelopes/:envelopeTitle', (req, res, next) => {
 app.put('/envelopes/:envelopeTitle', validateEnvelope, (req, res, next) => {
     // Find envelope is done via param. With that, you should also send either: 
     // A new budget or a spent value.
-    const foundEnvelope = envelopes.find((prevEnvelope) => {return prevEnvelope.title == req.envelope.title});
+    const foundEnvelope = app.envelopes.find((prevEnvelope) => {return prevEnvelope.title == req.envelope.title});
     if (foundEnvelope) {
         envelopes[envelopes.indexOf(foundEnvelope)] = req.body;
         res.status(200).send('Envelope updated.')
