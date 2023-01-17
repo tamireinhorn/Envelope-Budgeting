@@ -142,7 +142,7 @@ describe("envelope routes", function () {
     it(`Rejects an envelope if the budget is negative`, function () {
       return request(app)
       .put(`/envelopes/Food`)
-      .send({title:'Food', budget: 100})
+      .send({title:'Food', budget: -100})
       .expect(400);
     });
   
@@ -152,7 +152,7 @@ describe("envelope routes", function () {
       return request(app)
       .put('/envelopes/Gas')
       .send({title: 'Gas', budget: 10})
-      .expect(200);
+      .expect(204);
     })
   })
 });

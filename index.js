@@ -66,9 +66,26 @@ app.post('/envelopes', validateEnvelopes, (req, res, next) => {
 });
 
 // PUT envelope:
-// app.put('/envelopes/:envelopeTitle', validateEnvelopes, (req, res, next) => {
-//     // TODO: If envelope already exists, update code, else create, the rest is already handled?
-// });
+app.put('/envelopes/:envelopeTitle', validateEnvelopes, (req, res, next) => {
+    // TODO: If envelope already exists, update code, else create, the rest is already handled?
+    if (app.envelopes.includes(req.envelope)){
+        res.sendStatus(204);
+    }
+    else{
+        res.status(201).send('Envelope did not exist before, so it was created');
+    }
+ });
+
+ // DELETE envelope:
+app.delete('/envelopes/:envelopeTitle', (req, res, next) => {
+    if (req.envelope){
+        envelopes = envelopes.filter(envelope => envelope.title !== req.envelope.title);
+        res.sendStatus(204);
+    }
+    else{
+        res.sendStatus(404);
+    }
+})
 
 
 module.exports = app;
