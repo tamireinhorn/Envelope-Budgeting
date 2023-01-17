@@ -73,7 +73,7 @@ describe("envelope routes", function () {
     beforeEach(addTestEnvelope);
     afterEach(removeEnv);
     it("cannot find envelopes that are not there", function () {
-      return request(app).get("/envelopes/200").expect(404);
+      return request(app).get("/envelopes/Food").expect(404);
     });
 
     it("returns an envelope if it exists", function () {
@@ -91,6 +91,31 @@ describe("envelope routes", function () {
     });
   });
 
+  describe('POST envelope', function () {
+    beforeEach(addTestEnvelope);
+    afterEach(removeEnv);
+    it(`Rejects an envelope if it is badly formed`, function () {
+      return request(app)
+      .post(`/envelopes`)
+      .send({budget: 100})
+      .expect(400);
+    });
+
+    it(`Rejects an envelope if the budget is negative`, function () {
+      return request(app)
+      .post(`/envelopes`)
+      .send({title:'Food', budget: -100})
+      .expect(400);
+    });
+
+    it('Rejects envelopes that already exist', function (){
+      return request(app)
+      .post('/envelopes')
+      .send({title:'Gas', budget: 100})
+      .expect(400);
+    })
+  });
+
   describe('PUT envelope', function () {
     beforeEach(addTestEnvelope);
     afterEach(removeEnv);
@@ -100,6 +125,14 @@ describe("envelope routes", function () {
       .send({budget: 100})
       .expect(400);
     });
+    it(`Rejects an envelope if the budget is negative`, function () {
+      return request(app)
+      .put(`/envelopes/Food`)
+      .send({title:'Food', budget: 100})
+      .expect(400);
+    });
+  
+    
 
     it('Creates an envelope if it is the first', function () {
 
