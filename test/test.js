@@ -2,15 +2,15 @@ const expect = require("chai").expect;
 const request = require("supertest");
 
 const app = require("../index");
-let envelopes = app.envelopes;
+
 
 const addTestEnvelope = () => {
 
-  envelopes.push({ title: "Gas", budget: "2000" });
+  app.envelopes.push({ title: "Gas", budget: "2000" });
 };
 const removeEnv = () => {
 
-  envelopes = envelopes.filter(env => env.title !== "Gas");
+  app.envelopes = app.envelopes.filter(env => env.title !== "Gas");
 };
 
 describe("envelope routes", function () {
@@ -38,7 +38,7 @@ describe("envelope routes", function () {
       return request(app)
         .get("/envelopes")
         .expect(200)
-        .then((response) => expect(response.body).to.deep.equal(envelopes));
+        .then((response) => expect(response.body).to.deep.equal(app.envelopes));
     });
   });
 
@@ -127,6 +127,10 @@ describe("envelope routes", function () {
       .post('/envelopes')
       .send({title:'Gas', budget: 100})
       .expect(409);
+    });
+
+    it('Accepts a regular envelope', function (){
+      return request(app).post('/envelopes').send({title: 'Food', budget: 10}).expect(201);
     })
   });
 
@@ -153,6 +157,23 @@ describe("envelope routes", function () {
       .put('/envelopes/Gas')
       .send({title: 'Gas', budget: 10})
       .expect(204);
+    })
+  });
+
+  describe('Integration tests', function () {
+    it('Can GET an envelope after POST', function () {
+      request(app).post('/envelopes').send({title: 'Food', budget: 10});
+      return request(app)
+        .get(`/envelopes/Food`)
+        .expect(200)
+        .then((response) => {
+          const envelope = response.body;
+
+          expect(envelope).to.be.an.instanceOf(Object);
+          expect(envelope).to.have.ownProperty("title");
+          expect(envelope).to.have.ownProperty("budget");
+          expect(envelope.title).to.be.an.equal("Food");
+        });
     })
   })
 });

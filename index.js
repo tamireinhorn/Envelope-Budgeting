@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 PORT = 3000;
 
-let envelopes = [];
+
+app.envelopes = [];
 
 const validateEnvelopes = (req, res, next) => {
     // A valid envelope has to have title, and a positive budget
@@ -16,10 +17,10 @@ const validateEnvelopes = (req, res, next) => {
     }
 };
 
-app.envelopes = envelopes;
+
 
 app.param('envelopeTitle', (req, res, next, title) => {
-    const envelope = app.envelopes.find(envelope => envelope.title.toLowerCase() === req.params.envelopeTitle.toLowerCase());
+    const envelope = app.envelopes.find(envelope => envelope.title.toLowerCase() === title.toLowerCase());
     if (envelope){
         req.envelope = envelope;
     }
@@ -37,7 +38,7 @@ app.listen(PORT, () =>
 // GET all envelopes:
 
 app.get('/envelopes', (req, res, next) => {
-    res.send(envelopes);
+    res.send(app.envelopes);
 });
 
 // GET specific envelope:
@@ -59,7 +60,7 @@ app.post('/envelopes', validateEnvelopes, (req, res, next) => {
         res.status(409).send('An envelope with this title already exists!');
     }
     else {
-        envelopes.push(req.envelope);
+        app.envelopes.push(req.body);
         res.sendStatus(201);
     }
     
@@ -79,13 +80,12 @@ app.put('/envelopes/:envelopeTitle', validateEnvelopes, (req, res, next) => {
  // DELETE envelope:
 app.delete('/envelopes/:envelopeTitle', (req, res, next) => {
     if (req.envelope){
-        envelopes = envelopes.filter(envelope => envelope.title !== req.envelope.title);
+        app.envelopes = app.envelopes.filter(envelope => envelope.title !== req.envelope.title);
         res.sendStatus(204);
     }
     else{
         res.sendStatus(404);
     }
 })
-
 
 module.exports = app;
