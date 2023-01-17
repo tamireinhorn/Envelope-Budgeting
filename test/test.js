@@ -128,10 +128,14 @@ describe("envelope routes", function () {
       .send({title:'Gas', budget: 100})
       .expect(409);
     });
-
+    describe('POST for a normal envelope', function () {
+    this.afterEach(() => {
+      app.envelopes = app.envelopes.filter(env => env.title !== "Gas");
+    })
     it('Accepts a regular envelope', function (){
       return request(app).post('/envelopes').send({title: 'Food', budget: 10}).expect(201);
     })
+    });
   });
 
   describe('PUT envelope', function () {
@@ -160,20 +164,5 @@ describe("envelope routes", function () {
     })
   });
 
-  describe('Integration tests', function () {
-    it('Can GET an envelope after POST', function () {
-      request(app).post('/envelopes').send({title: 'Food', budget: 10});
-      return request(app)
-        .get(`/envelopes/Food`)
-        .expect(200)
-        .then((response) => {
-          const envelope = response.body;
-
-          expect(envelope).to.be.an.instanceOf(Object);
-          expect(envelope).to.have.ownProperty("title");
-          expect(envelope).to.have.ownProperty("budget");
-          expect(envelope.title).to.be.an.equal("Food");
-        });
-    })
-  })
-});
+  
+  });

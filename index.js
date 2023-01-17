@@ -57,9 +57,11 @@ app.post('/envelopes', validateEnvelopes, (req, res, next) => {
     // Verify if envelope already exists:
     const newEnvelopeTitle = req.body.title;
     if (app.envelopes.find(envelope => envelope.title.toLowerCase() === newEnvelopeTitle.toLowerCase())){
+
         res.status(409).send('An envelope with this title already exists!');
     }
     else {
+
         app.envelopes.push(req.body);
         res.sendStatus(201);
     }
@@ -68,7 +70,6 @@ app.post('/envelopes', validateEnvelopes, (req, res, next) => {
 
 // PUT envelope:
 app.put('/envelopes/:envelopeTitle', validateEnvelopes, (req, res, next) => {
-    // TODO: If envelope already exists, update code, else create, the rest is already handled?
     if (app.envelopes.includes(req.envelope)){
         res.sendStatus(204);
     }
