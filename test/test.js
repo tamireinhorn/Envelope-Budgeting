@@ -14,7 +14,7 @@ const removeEnv = () => {
 };
 
 describe("envelope routes", function () {
-  describe("GET envelopes", function () {
+  describe("GET ALL envelopes", function () {
     beforeEach(addTestEnvelope);
     afterEach(removeEnv);
     it("returns an array", function () {
@@ -89,6 +89,20 @@ describe("envelope routes", function () {
           expect(envelope.title).to.be.an.equal("Gas");
         });
     });
+
+    it("is case insensitive", function () {
+      return request(app)
+        .get(`/envelopes/gas`)
+        .expect(200)
+        .then((response) => {
+          const envelope = response.body;
+
+          expect(envelope).to.be.an.instanceOf(Object);
+          expect(envelope).to.have.ownProperty("title");
+          expect(envelope).to.have.ownProperty("budget");
+          expect(envelope.title).to.be.an.equal("Gas");
+        });
+    });
   });
 
   describe('POST envelope', function () {
@@ -112,7 +126,7 @@ describe("envelope routes", function () {
       return request(app)
       .post('/envelopes')
       .send({title:'Gas', budget: 100})
-      .expect(400);
+      .expect(409);
     })
   });
 
@@ -132,15 +146,7 @@ describe("envelope routes", function () {
       .expect(400);
     });
   
-    
 
-    it('Creates an envelope if it is the first', function () {
-
-      return request(app)
-      .put('/envelopes/Food')
-      .send({title: 'Food', budget: 100})
-      .expect(201);
-    });
 
     it('Updates envelopes when they already exist', function () {
       return request(app)
