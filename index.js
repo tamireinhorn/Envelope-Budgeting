@@ -61,8 +61,9 @@ app.post('/envelopes', validateEnvelopes, (req, res, next) => {
         res.status(409).send('An envelope with this title already exists!');
     }
     else {
-
-        app.envelopes.push(req.body);
+        const envelope = req.body;
+        envelope.id = app.envelopes.length + 1;
+        app.envelopes.push(envelope);
         res.sendStatus(201);
     }
     
@@ -74,6 +75,9 @@ app.put('/envelopes/:envelopeTitle', validateEnvelopes, (req, res, next) => {
         res.sendStatus(204);
     }
     else{
+        const envelope = req.body;
+        envelope.id = app.envelopes.length + 1;
+        app.envelopes.push(envelope);
         res.status(201).send('Envelope did not exist before, so it was created');
     }
  });
@@ -87,6 +91,28 @@ app.delete('/envelopes/:envelopeTitle', (req, res, next) => {
     else{
         res.sendStatus(404);
     }
-})
+});
+
+// Transfer between envelopes:
+
+app.put('/envelopes/:envelopeTitle/transfer/:to', (req, res, next) => {
+    const toEnvelope = app.envelopes.find(envelope => envelope.title.toLowerCase() === req.params.to.toLowerCase());
+    const fromEnvelope = req.envelope;
+    if (fromEnvelope && toEnvelope){
+        const fromBudget = fromEnvelope.budget - req.body.amount;
+        const toBudget = toEnvelope.budget + req.body.amount;
+        if(fromBudget < 0 || toBudget < 0){
+            res.status(400).send('Insufficient funds');
+        }
+        else{
+            app.envelopes[toEnvelope.id].budget = toBudget;
+            app.envelopes[fromEnvelope.id].budget = fromBudget;
+            res.status(200).send(fromEnvelope);
+        }
+    }
+    else{
+        res.sendStatus(404);   
+    }
+});
 
 module.exports = app;
