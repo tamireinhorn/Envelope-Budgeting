@@ -4,7 +4,7 @@
   
       
     "start": "nodemon server.js",
-    "test": "mocha",
+    "test": "mocha --watch",
     "coverage": "nyc --reporter=lcov npm run test"
   
     },
